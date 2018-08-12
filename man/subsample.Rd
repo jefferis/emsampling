@@ -7,8 +7,20 @@
 subsample(x, fraction = 1)
 }
 \arguments{
-\item{fraction}{}
+\item{x}{A \code{samplingcurve} object or a neuron specification that can be
+passed to \code{make_rand_sampling_curve}.}
+
+\item{fraction}{A fraction from 0-1 speciying the proportion of connections
+to keep in the sample.}
+}
+\value{
+A new \code{samplingcurve} object
 }
 \description{
 Reorder a sampling curve object, optionally subsampling a given fraction
+}
+\examples{
+scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+hist(scuniform)
+sc
 }

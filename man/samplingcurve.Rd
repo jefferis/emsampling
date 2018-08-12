@@ -2,24 +2,54 @@
 % Please edit documentation in R/sampling_curves.R
 \name{samplingcurve}
 \alias{samplingcurve}
+\alias{plot.samplingcurve}
+\alias{hist.samplingcurve}
 \title{Make a basic sampling curve from a vector of partner ids}
 \usage{
-samplingcurve(partners, N = NULL, m = NULL, ...)
+samplingcurve(partners, N = NULL, m = NULL)
+
+\method{plot}{samplingcurve}(x, col = "red", ...)
+
+\method{hist}{samplingcurve}(x, decreasing = TRUE, plot = TRUE, ...)
 }
 \arguments{
+\item{partners}{A vector or partner neuron identifiers (typically numeric such as CATMAID skeleton ids)}
+
 \item{N, m}{optional parameters describing the total number of connections and
 the total number of partners (if known).}
+
+\item{x}{A \code{\link{samplingcurve}} object}
+
+\item{col}{colour of the lines}
+
+\item{...}{Additional arguments to plotting functions}
+
+\item{decreasing}{Whether to plot the strongest connections closest to the y
+axis (default \code{TRUE})}
+
+\item{plot}{Whether to show the plot}
 
 \item{...}{}
 }
 \value{
 An object of class \code{samplingcurve}, currently implemented as a
   data.frame.
+
+\code{hist.samplingcurve} returns the \code{table} of connections per
+  partner used for the plot.
 }
 \description{
 Make a basic sampling curve from a vector of partner ids
+
+\code{plot.samplingcurve} plots a standard sampling curve
+
+\code{hist.samplingcurve} plots a histogram of connections per
+  partner neuron. strictly speaking this is a bar plot for a table object
+  rather than an R histogram
 }
 \examples{
 scuniform=samplingcurve(sample(1:20, size=200, replace=T))
 plot(scuniform)
+scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+hist(scuniform)
 }

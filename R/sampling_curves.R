@@ -48,10 +48,9 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'), sample=
 
 #' Make a basic sampling curve from a vector of partner ids
 #'
-#' @param partners
+#' @param partners A vector or partner neuron identifiers (typically numeric such as CATMAID skeleton ids)
 #' @param N,m optional parameters describing the total number of connections and
 #'   the total number of partners (if known).
-#' @param ...
 #'
 #' @return An object of class \code{samplingcurve}, currently implemented as a
 #'   data.frame.
@@ -60,7 +59,7 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'), sample=
 #' @examples
 #' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
 #' plot(scuniform)
-samplingcurve <- function(partners, N=NULL, m=NULL, ...) {
+samplingcurve <- function(partners, N=NULL, m=NULL) {
   new=!duplicated(partners)
   csnew=cumsum(new)
   res=data.frame(new=csnew, partner=partners)
@@ -84,16 +83,13 @@ get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
   df
 }
 
-#' Plot a standard sampling surve
+#' @description \code{plot.samplingcurve} plots a standard sampling curve
 #'
-#' @param x
-#' @param col
-#' @param ...
+#' @param col colour of the lines
+#' @param ... Additional arguments to plotting functions
 #'
-#' @return
 #' @export
-#'
-#' @examples
+#' @rdname samplingcurve
 plot.samplingcurve <- function(x, col='red', ...) {
   plot(x$new, type='l', xlab='Connections Tested', ylab='New Neurons', col=col, ...)
   abline(a=0, b=1, lty=2)
@@ -123,19 +119,24 @@ lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., col
   }
 }
 
-#' Plot a histogram of connections per partner neuron
-#'
-#' @description Strictly speaking this is a bar plot for a table object rather
-#'   than an R histogram
+
+#' @description \code{hist.samplingcurve} plots a histogram of connections per
+#'   partner neuron. strictly speaking this is a bar plot for a table object
+#'   rather than an R histogram
 #' @param x A \code{\link{samplingcurve}} object
-#' @param decreasing
-#' @param plot
+#' @param decreasing Whether to plot the strongest connections closest to the y
+#'   axis (default \code{TRUE})
+#' @param plot Whether to show the plot
 #' @param ...
 #'
-#' @return
+#' @return \code{hist.samplingcurve} returns the \code{table} of connections per
+#'   partner used for the plot.
 #' @export
 #'
+#' @rdname samplingcurve
 #' @examples
+#' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+#' hist(scuniform)
 hist.samplingcurve <- function(x, decreasing = TRUE, plot=TRUE, ...) {
   tt=table(x$partner)
   stt=sort(tt, decreasing=decreasing)
@@ -156,13 +157,18 @@ plot_sampling_ecdf <- function(x, decreasing = TRUE, ...) {
 
 #' Reorder a sampling curve object, optionally subsampling a given fraction
 #'
-#' @param x
-#' @param fraction
+#' @param x A \code{samplingcurve} object or a neuron specification that can be
+#'   passed to \code{make_rand_sampling_curve}.
+#' @param fraction A fraction from 0-1 speciying the proportion of connections
+#'   to keep in the sample.
 #'
-#' @return
+#' @return A new \code{samplingcurve} object
 #' @export
 #'
 #' @examples
+#' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+#' hist(scuniform)
+#' sc
 subsample <- function(x, fraction=1.0) {
   if(!inherits(x, 'samplingcurve'))
     x=make_rand_sampling_curve(x, sample = FALSE)
