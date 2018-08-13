@@ -67,6 +67,10 @@ Make a basic sampling curve from a vector of partner ids
 \examples{
 scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 plot(scuniform)
+# add 20 random realisations
+lines(scuniform, rand=20)
+# add a smooth mean
+lines(scuniform, rand=1000, mean=TRUE, col='black')
 scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 hist(scuniform)
 }

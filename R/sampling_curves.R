@@ -59,6 +59,10 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'), sample=
 #' @examples
 #' scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 #' plot(scuniform)
+#' # add 20 random realisations
+#' lines(scuniform, rand=20)
+#' # add a smooth mean
+#' lines(scuniform, rand=1000, mean=TRUE, col='black')
 samplingcurve <- function(partners, N=NULL, m=NULL) {
   new=!duplicated(partners)
   csnew=cumsum(new)
