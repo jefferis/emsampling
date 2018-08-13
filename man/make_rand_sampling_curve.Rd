@@ -26,7 +26,7 @@ Make (randomised) sampling curve object for neuron or connection table
 }
 \details{
 \code{make_rand_sampling_curve} is a thin wrapper for
-  \code{\link{samplingcurve}}, which has the additional functionliaty of
+  \code{\link{samplingcurve}}, which has the additional functionality of
   fetching (all) the synapses for one or more CATMAID neurons (specified
   using any form compatible with \code{\link{catmaid_skids}}).
 }

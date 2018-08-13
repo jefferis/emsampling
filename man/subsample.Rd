@@ -10,7 +10,7 @@ subsample(x, fraction = 1)
 \item{x}{A \code{samplingcurve} object or a neuron specification that can be
 passed to \code{make_rand_sampling_curve}.}
 
-\item{fraction}{A fraction from 0-1 speciying the proportion of connections
+\item{fraction}{A fraction from 0-1 specifying the proportion of connections
 to keep in the sample.}
 }
 \value{

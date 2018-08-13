@@ -1,7 +1,7 @@
 #' Make (randomised) sampling curve object for neuron or connection table
 #'
 #' @details \code{make_rand_sampling_curve} is a thin wrapper for
-#'   \code{\link{samplingcurve}}, which has the additional functionliaty of
+#'   \code{\link{samplingcurve}}, which has the additional functionality of
 #'   fetching (all) the synapses for one or more CATMAID neurons (specified
 #'   using any form compatible with \code{\link{catmaid_skids}}).
 #'
@@ -169,7 +169,7 @@ plot_sampling_ecdf <- function(x, decreasing = TRUE, ...) {
 #'
 #' @param x A \code{samplingcurve} object or a neuron specification that can be
 #'   passed to \code{make_rand_sampling_curve}.
-#' @param fraction A fraction from 0-1 speciying the proportion of connections
+#' @param fraction A fraction from 0-1 specifying the proportion of connections
 #'   to keep in the sample.
 #'
 #' @return A new \code{samplingcurve} object
@@ -236,13 +236,13 @@ plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
 }
 
 
-#' Generate a set of replicates for uniform multivate hypergeometric
+#' Generate a set of replicates for uniform multivariate hypergeometric
 #' distribution
 #'
 #' @details \code{N,m} The number of marbles of each colour in the urn must be
-#'   integral. If the total numbe of marbles, \code{N}, is not evenly divisible
-#'   by the nuber of colours, \code{m}, the remaining r marbles are added one by
-#'   one to the the first r colours.
+#'   integral. If the total number of marbles, \code{N}, is not evenly divisible
+#'   by the number of colours, \code{m}, the remaining r marbles are added one
+#'   by one to the the first r colours.
 #'
 #' @param N number of marbles
 #' @param m number of colours
@@ -263,5 +263,4 @@ urmvhyper <- function(N, m, k=NULL, fraction=NULL, nn=10e3) {
   rmvhyper(nn, n = ni, k=k)
 }
 
-negexp <- function(A, k) function(x) A*(1-exp(-k*x))
-negexp(A=100, k=5)
+negexp <- function(A, k) {function(x) A*(1-exp(-k*x))}
