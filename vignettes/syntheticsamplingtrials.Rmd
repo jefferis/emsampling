@@ -1,0 +1,341 @@
+---
+title: ""
+author: "Gregory Jefferis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Synthetic Sampling Trials}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=6,
+  fig.height=4.5
+)
+```
+
+## Introduction
+
+We want to think a bit about the process of sampling random partners upstream
+or downstream of a given neuron. In most cases in FAFB this is prohibitively
+expensive, so it has rarely been done. However, there are instances, particularly
+cases where a neuron is locally complete for some arbour. We would like to 
+think about how much we can infer about the distribution of real connection 
+strengths based on knowing the partners for only a random sample of those connections.
+
+### Setup
+
+We first source in some functions that define an object of class `samplingcurve`
+that we define to enable some convenience plotting and analysis functions.
+```{r, message=FALSE}
+
+library(emsampling)
+# for consistency later ...
+set.seed(42)
+```
+
+## Toy examples
+Let's consider some toy examples in order to develop some intuiition for and
+approaches to this problem.
+
+### Uniform distribution
+The simplest example is a neuron that makes the same number of connections with every partner.
+
+```{r}
+# scuniformp=samplingcurve(sample(1:20, size=200, replace=T))
+scuniform=samplingcurve(rep(1:20,10))
+head(scuniform)
+```
+
+Let's look at the distribution of partners. In this simplest of all cases, it's
+uniform.
+
+```{r}
+hist(scuniform)
+```
+
+Now let's look at what happens as the sampling curve evolves:
+```{r}
+plot(scuniform)
+```
+
+Hmm, that's because the connections are in a non-random order. Let's randomise.
+We have a function for that `subsample`.
+
+```{r}
+scuniformr=subsample(scuniform)
+plot(scuniformr)
+```
+
+OK. That looks more reasonable. A brief note about the plot. The red line plots
+the number of new neurons for each connection tested. There is a horizontal step
+each time we hit a neuron that we have already seen. The black dashed line is
+the equality line (y=x), i.e. what we would get if there were only one partner
+per neuron.
+
+Now, assuming our random sampling is precisely that, we should see different 
+curves for different runs.
+
+```{r}
+plot(scuniformr, lwd=2)
+lines(scuniform, rand=20, col='black')
+```
+
+We can also look at how the proportion of identified targets evolves:
+
+```{r}
+plot_prop_identified(scuniformr)
+```
+
+In this instance, this is identical to the plot above, just with the axes
+normalised. Things could be different of course if we set some threshold on 
+which partners (strong?) we wanted to 
+
+### Uniform - more synapses
+
+Let's look at what happens when we have a neuron that makes more synapses but
+has the same number of partners.
+
+```{r}
+scuniform2k=samplingcurve(sample(rep(1:20,100)))
+plot(scuniform2k)
+lines(scuniform2k, rand = 100)
+```
+
+So we can see that in this situation we need to sample a relatively small
+fraction of the total number of connections in order to identify all partners. 
+In fact the absolute amount of sampling required is very similar to the case 
+above with 10 connections per partner.
+
+### How much do we need to sample?
+
+Imagine we want to define a reasonable amount of sampling for
+the two examples above. For example we might calculate the amount of sampling
+required to have a 95% chance of identifying 80% of the partners.
+
+We could do this by computing many randomised versions of the sampling curves and then thresholding appropriately.
+
+```{r}
+required_sample <- function(x, required=.8, certainty=.95, replicates=1000) {
+  csx=function(x) cumsum(!duplicated(sample(x)))
+  pp=replicate(replicates, csx(x$partner))
+  
+  npartners=length(unique(x$partner))
+  threshold=npartners*required
+  names(threshold) <- required
+  res=t(sapply(threshold, function(t) quantile(colSums(pp<t)+1, probs = certainty)))
+  attr(res, 'x')=required
+  attr(res, 'y')=certainty
+  res
+}
+```
+
+```{r}
+required_sample(scuniformr, certainty = c(0.5,0.9,0.95,.975,0.99))
+scuniform2k.rs <- required_sample(scuniform2k,
+                                  certainty = c(0.5,0.9,0.95,.975,0.99))
+scuniform2k.rs
+```
+
+So we can read this as saying that we need to sample `r scuniform2k.rs[3]` synapses to
+have a 95% chance of identifying at least 80% (i.e. 16) of the partners.
+
+`required_sample` is vectorised over both the `required` fraction of partners
+identified and the required `certainty`.
+
+```{r}
+sdist = required_sample(
+  scuniformr,
+  required = seq(from = 0, to = 1, by = 0.05),
+  certainty = c(0.01, .025, 0.05, 0.1, 0.5, 0.9, 0.95, .975, 0.99),
+  replicates = 10e3
+  )
+knitr::kable(sdist)
+```
+
+Here the columns represent the quantiles (i.e. certainty) and the rows are the 
+fraction of connections to be found.
+```{r}
+library(viridis)
+filled.contour(sdist, 
+               color.palette = viridis,
+               x = attr(sdist,'x'),
+               y = attr(sdist,'y'),
+               xlab='required',
+               ylab='certainty',
+               key.title = title(main='Samples')
+               )
+```
+
+
+We could repeat this plot normalising the number of samples
+
+```{r}
+sdist = required_sample(
+  scuniformr,
+  required = seq(from = 0, to = 1, by = 0.05),
+  certainty = c(0.5, 0.9, 0.95, .975, 0.99),
+  replicates = 10e3
+  )
+filled.contour(sdist/200, 
+               color.palette = viridis,
+               x = attr(sdist,'x'),
+               y = attr(sdist,'y'),
+               xlab='required',
+               ylab='certainty',
+               key.title = title(main='Frac Sampled', cex.main = .7)
+               )
+```
+
+### Distribution
+
+The statistical distribution that describes the sampling processes above is the 
+[multivariate hypergeometric distribution](https://en.wikipedia.org/wiki/Hypergeometric_distribution#Multivariate_hypergeometric_distribution). The `extraDistr::rmvhyper` function provides an
+alternative way of generating random variables --- however it is less efficient
+for our purposes of generating a complete sampling sequence from k=1:N connections
+rather than just a given value of k.
+
+This distribution is classically described as sampling *without replacement* from
+an urn containing balls of different colours. In our problem, the colours represent
+each partner neuron. We can sample `k` balls of the `N` total, where there are
+`m` colours and each colour appears `n_i` times (`i=1:m`).
+
+## Inference
+
+In the sections above, we defined a known distribution of partners. However, we
+will normally not know this when we are carrying out a sampling procedure --- if
+we did, we would not need to worry about sampling.
+
+The more interesting situation for us is the one in which we have partial 
+sampling information in front of us, but we do not know the distribution of the
+number of balls. While we will normally know the total number of connections, we
+will not know the number of partners or their distribution. A complete description
+of the full multivariate hypergeometric parameter set will probably be beyond us,
+because there would be m parameters (numbers of each colour) to estimate. To see
+why, consider a (small) real neuron which has 200 connections, with 50% of the
+partners making 1 or 2 connections, but these weak partners might only contribute 10% of the connections.
+
+It will therefore be more plausible to infer some kind of summary of the 
+distribution of partners. This could be the number of *strong* partners by some
+definition or perhaps a histogram that divides connection strengths into coarse
+groups. Finally it could be hyperparameters that describe the distribution from 
+which the multivariate hypergeometric parameters `n_i` are drawn. This might for
+example be a skewed distribution, which could be characterised by e.g. its first
+3 or 4 moments. It may well be that the distribution of connection strength 
+can be described by some relatively well known distribution like the
+exponential distribution, in which case 1 or 2 parameters might suffice.
+
+
+### Toy inference
+To get a handle on the problem, we will start by considering the same uniform
+distribution of partners used above. So the problem resolves to defining the 
+number of partner neurons (m).
+
+Let's imagine that we have in front of us a 25% sample of the first neuron that
+we used.
+
+```{r}
+scuniform.25=subsample(scuniformr, fraction = 0.25)
+plot(scuniform.25, ylim=c(0,20), lwd=3)
+abline(h=20, lty=3, col='grey')
+```
+
+Now in this case we found `r max(scuniform.25$new)`/20 partners, but of course
+we might have hit a different number by chance.
+
+We could try to identify the most likely value for `m` by simulating a 25% sample
+for many values of m and then choosing the one most likely to generate the 
+observed sampling curve. Now we know that `m` must be greater than 
+
+```{r}
+mvh_uniform_mle <- function(x, ni=NULL, N=attr(x, 'N'), ...) {
+  stopifnot(inherits(x,'samplingcurve'))
+  stopifnot(isTRUE(N>1))
+  observed_m=length(unique(x$partner))
+  max_m=N # hopefully this is massive overestimate
+  # would be great if we could adaptively reduce max_m when we have gone over
+  # the hump
+  if(is.null(ni))
+    ni=seq.int(observed_m, max_m)
+  else {
+    # check we have a sensible range
+    if(ni[1]<observed_m) {
+      warning("minimum ni < observed_m")
+    }
+    stopifnot(ni[length(ni)]<max_m)
+  }
+  k=nrow(x)
+  
+  # calculate number of observations matching observed value for each n_i
+  nobs=sapply(ni, 
+              function(m) sum(rowSums(
+                urmvhyper(N=N, m=m, k=k, ...)>0)==observed_m)
+              )
+  names(nobs)=ni
+  nobs
+}
+
+```
+
+Now, let's use those functions:
+
+```{r}
+mvh_uniform_mle(scuniform.25, ni=19:24)
+mvh_uniform_mle(subsample(scuniform2k, fraction = .05), ni=19:24)
+```
+
+Now, in both cases we see that m=20 partners is our maxmimum likelihood estimate. 
+
+### Using the sampling curve
+The preceding section developed a maximum likelihood approach to estimating the
+number of partners in our toy example. This is all very well, but it actually 
+uses almost none of the information inherent in the sampling curve. In particular
+it uses only the final number of partners observed rather than the distribution
+of randomly observed connection strengths.
+
+We could think about the features of this distribution being encapsulated in the
+staircase nature of the sampling curve. Here is an example of such a curve (red line) for a 25% sample of our toy neuron's connections; additional 25% samples
+are plotted in grey.
+
+```{r}
+plot(scuniform.25, lwd=3)
+# add lines resampling from the full partner data
+lines(scuniform, rand = 20)
+```
+
+The red line looks like it belongs within the family of grey curves. But what
+we can we say about the general form of these sampling curves? First of all, the
+order of connections selected in each sampling curve is irrelevant. Therefore 
+any permutation of the selected connections is equally valid representation of
+that particular sample. 
+
+Let's look at a plot with a re-ordering of that 25% sample. We can generalise 
+the step function to a mean curve. The `lines.samplingcurve` function can do that for us.
+
+```{r}
+plot(scuniform.25)
+# plot 20 random re-ordering (grey dotted lines)
+lines(scuniform.25, rand=20, col='grey')
+# plot the mean of 2000 reorderings
+lines(scuniform.25, rand=2000, mean=TRUE, col='blue')
+```
+
+
+```{r}
+plot(scuniform.25)
+lines(scuniform.25, rand=2000, mean=TRUE, col='grey')
+# compare with another random 25% draw
+scuniform.25v2=subsample(scuniformr, fraction=0.25)
+lines(scuniform.25v2, rand=2000, mean=TRUE, col='green')
+lines(scuniformr, rand=2000, mean=TRUE, col='blue')
+```
+
+
+
+```{r}
+hist(scuniform.25)
+```

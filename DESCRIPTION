@@ -17,7 +17,11 @@ Imports:
     extraDistr
 Suggests:
     elmr,
-    spelling
+    spelling,
+    knitr,
+    rmarkdown,
+    viridis
 Remotes: jefferis/rcatmaid,
     jefferis/elmr
 Language: en-GB
+VignetteBuilder: knitr
