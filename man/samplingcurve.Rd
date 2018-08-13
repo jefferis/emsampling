@@ -27,9 +27,7 @@ the total number of partners (if known).}
 \item{decreasing}{Whether to plot the strongest connections closest to the y
 axis (default \code{TRUE})}
 
-\item{plot}{Whether to show the plot}
-
-\item{...}{}
+\item{plot}{Whether to show the histogram}
 }
 \value{
 An object of class \code{samplingcurve}, currently implemented as a
@@ -48,8 +46,8 @@ Make a basic sampling curve from a vector of partner ids
   rather than an R histogram
 }
 \examples{
-scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 plot(scuniform)
-scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 hist(scuniform)
 }

@@ -20,7 +20,7 @@ A new \code{samplingcurve} object
 Reorder a sampling curve object, optionally subsampling a given fraction
 }
 \examples{
-scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 hist(scuniform)
-sc
+head(scuniform)
 }

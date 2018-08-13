@@ -12,5 +12,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports: 
-    catmaid
-Remotes: jefferis/rcatmaid
+    catmaid,
+    nat,
+    extraDistr
+Suggests:
+    elmr
+Remotes: jefferis/rcatmaid,
+    jefferis/elmr

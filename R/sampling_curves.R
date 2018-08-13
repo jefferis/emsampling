@@ -57,7 +57,7 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'), sample=
 #' @export
 #'
 #' @examples
-#' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+#' scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 #' plot(scuniform)
 samplingcurve <- function(partners, N=NULL, m=NULL) {
   new=!duplicated(partners)
@@ -69,14 +69,22 @@ samplingcurve <- function(partners, N=NULL, m=NULL) {
   res
 }
 
+
+#' @importFrom catmaid catmaid_get_connector_table catmaid_get_node_count nsoma
+#' @importFrom nat pointsinside
 get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
   partners=match.arg(partners)
   df <- catmaid_get_connector_table(x, direction = partners)
   df$nodes=catmaid_get_node_count(df$partner_skid)
   df$nsoma=nsoma(df$partner_skid)
   if(!is.null(volume)) {
-    if(is.character(volume))
+    if(is.character(volume)){
+      if(!requireNamespace('elmr'))
+        stop("Suggested package elmr is required for named volumes!",
+             " Install using:\n",
+             "  devtools::install_github('jefferis/elmr')")
       volume=subset(elmr::FAFBNP.surf, subset=volume)
+    }
     pp=pointsinside(df, volume)
     df=df[pp,]
   }
@@ -90,11 +98,13 @@ get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
 #'
 #' @export
 #' @rdname samplingcurve
+#' @importFrom graphics plot abline
 plot.samplingcurve <- function(x, col='red', ...) {
   plot(x$new, type='l', xlab='Connections Tested', ylab='New Neurons', col=col, ...)
   abline(a=0, b=1, lty=2)
 }
 
+#' @importFrom graphics lines
 lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., colpal='grey'){
   if(is.null(col)) {
     if(is.function(colpal)) colpal <- colpal(rand)
@@ -126,8 +136,7 @@ lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., col
 #' @param x A \code{\link{samplingcurve}} object
 #' @param decreasing Whether to plot the strongest connections closest to the y
 #'   axis (default \code{TRUE})
-#' @param plot Whether to show the plot
-#' @param ...
+#' @param plot Whether to show the histogram
 #'
 #' @return \code{hist.samplingcurve} returns the \code{table} of connections per
 #'   partner used for the plot.
@@ -135,7 +144,7 @@ lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., col
 #'
 #' @rdname samplingcurve
 #' @examples
-#' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+#' scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 #' hist(scuniform)
 hist.samplingcurve <- function(x, decreasing = TRUE, plot=TRUE, ...) {
   tt=table(x$partner)
@@ -146,6 +155,7 @@ hist.samplingcurve <- function(x, decreasing = TRUE, plot=TRUE, ...) {
   invisible(stt)
 }
 
+#' @importFrom stats ecdf
 plot_sampling_ecdf <- function(x, decreasing = TRUE, ...) {
   if(!inherits(x, 'samplingcurve'))
     x=make_rand_sampling_curve(x, sample = FALSE)
@@ -166,9 +176,9 @@ plot_sampling_ecdf <- function(x, decreasing = TRUE, ...) {
 #' @export
 #'
 #' @examples
-#' scuniform=samplingcurve(sample(1:20, size=200, replace=T))
+#' scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
 #' hist(scuniform)
-#' sc
+#' head(scuniform)
 subsample <- function(x, fraction=1.0) {
   if(!inherits(x, 'samplingcurve'))
     x=make_rand_sampling_curve(x, sample = FALSE)
@@ -184,6 +194,7 @@ subsample <- function(x, fraction=1.0) {
   res
 }
 
+#' @importFrom grDevices rainbow
 plot_sampling_envelope <- function(x, rand.samples=20, partners="auto", ...) {
   orig <- if(inherits(x, 'samplingcurve')) x else
     make_rand_sampling_curve(x, partners = partners, sample=F)
@@ -225,13 +236,21 @@ plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
 }
 
 
-#' Generate a set of replicates for uniform multivate hypergeometric distribution
+#' Generate a set of replicates for uniform multivate hypergeometric
+#' distribution
+#'
+#' @details \code{N,m} The number of marbles of each colour in the urn must be
+#'   integral. If the total numbe of marbles, \code{N}, is not evenly divisible
+#'   by the nuber of colours, \code{m}, the remaining r marbles are added one by
+#'   one to the the first r colours.
 #'
 #' @param N number of marbles
 #' @param m number of colours
 #' @param k sample size
 #' @param fraction Fraction of N to sample
 #' @param nn Number of replicates
+#' @importFrom extraDistr rmvhyper
+#' @seealso \code{\link[extraDistr]{rmvhyper}}, \code{\link{rhyper}}
 urmvhyper <- function(N, m, k=NULL, fraction=NULL, nn=10e3) {
   if(is.null(k)) k=round(fraction*N)
   # what should we make the distribution of the m values of n_i?
@@ -241,7 +260,7 @@ urmvhyper <- function(N, m, k=NULL, fraction=NULL, nn=10e3) {
   remainder = N%%m
   if(remainder>0)
     ni[1:remainder]=ni[1:remainder]+1L
-  extraDistr::rmvhyper(nn, n = ni, k=k)
+  rmvhyper(nn, n = ni, k=k)
 }
 
 negexp <- function(A, k) function(x) A*(1-exp(-k*x))

@@ -2,7 +2,8 @@
 % Please edit documentation in R/sampling_curves.R
 \name{urmvhyper}
 \alias{urmvhyper}
-\title{Generate a set of replicates for uniform multivate hypergeometric distribution}
+\title{Generate a set of replicates for uniform multivate hypergeometric
+distribution}
 \usage{
 urmvhyper(N, m, k = NULL, fraction = NULL, nn = 10000)
 }
@@ -18,5 +19,15 @@ urmvhyper(N, m, k = NULL, fraction = NULL, nn = 10000)
 \item{nn}{Number of replicates}
 }
 \description{
-Generate a set of replicates for uniform multivate hypergeometric distribution
+Generate a set of replicates for uniform multivate hypergeometric
+distribution
+}
+\details{
+\code{N,m} The number of marbles of each colour in the urn must be
+  integral. If the total numbe of marbles, \code{N}, is not evenly divisible
+  by the nuber of colours, \code{m}, the remaining r marbles are added one by
+  one to the the first r colours.
+}
+\seealso{
+\code{\link[extraDistr]{rmvhyper}}, \code{\link{rhyper}}
 }
