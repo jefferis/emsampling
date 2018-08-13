@@ -253,8 +253,7 @@ plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
 }
 
 
-#' Generate a set of replicates for uniform multivariate hypergeometric
-#' distribution
+#' Generate replicates for uniform multivariate hypergeometric distribution
 #'
 #' @details \code{N,m} The number of marbles of each colour in the urn must be
 #'   integral. If the total number of marbles, \code{N}, is not evenly divisible
@@ -268,6 +267,7 @@ plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
 #' @param nn Number of replicates
 #' @importFrom extraDistr rmvhyper
 #' @seealso \code{\link[extraDistr]{rmvhyper}}, \code{\link{rhyper}}
+#' @export
 urmvhyper <- function(N, m, k=NULL, fraction=NULL, nn=10e3) {
   if(is.null(k)) k=round(fraction*N)
   # what should we make the distribution of the m values of n_i?
