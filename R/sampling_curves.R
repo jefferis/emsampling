@@ -93,7 +93,6 @@ get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
 
 #' @description \code{plot.samplingcurve} plots a standard sampling curve
 #'
-#' @param col colour of the lines
 #' @param ... Additional arguments to plotting functions
 #'
 #' @export
@@ -104,7 +103,21 @@ plot.samplingcurve <- function(x, col='red', ...) {
   abline(a=0, b=1, lty=2)
 }
 
+
+#' @description \code{lines.samplingcurve} adds a line for a sampling curve to
+#'   an existing plot. It can also add a specified number of re-randomised
+#'   versions of the curve, optionally producing a smoothed mean.
+#' @param rand number of randomised versions of curve to plot
+#' @param mean whether to plot the mean of specified number of random curves
+#'   rather than each individual curve.
+#' @param lty line type (see \code{\link{par}})
+#' @param col line colour (see \code{\link{lines}})
+#' @param colpal A colour palette. Either a function (see
+#'   \code{\link[grDevices]{rainbow}}) or a vector of colour names. Only used
+#'   when \code{col=NULL})
 #' @importFrom graphics lines
+#' @export
+#' @rdname samplingcurve
 lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., colpal='grey'){
   if(is.null(col)) {
     if(is.function(colpal)) colpal <- colpal(rand)

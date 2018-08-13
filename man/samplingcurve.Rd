@@ -3,12 +3,16 @@
 \name{samplingcurve}
 \alias{samplingcurve}
 \alias{plot.samplingcurve}
+\alias{lines.samplingcurve}
 \alias{hist.samplingcurve}
 \title{Make a basic sampling curve from a vector of partner ids}
 \usage{
 samplingcurve(partners, N = NULL, m = NULL)
 
 \method{plot}{samplingcurve}(x, col = "red", ...)
+
+\method{lines}{samplingcurve}(x, rand = 0, mean = FALSE, lty = 3,
+  col = NULL, ..., colpal = "grey")
 
 \method{hist}{samplingcurve}(x, decreasing = TRUE, plot = TRUE, ...)
 }
@@ -20,9 +24,20 @@ the total number of partners (if known).}
 
 \item{x}{A \code{\link{samplingcurve}} object}
 
-\item{col}{colour of the lines}
+\item{col}{line colour (see \code{\link{lines}})}
 
 \item{...}{Additional arguments to plotting functions}
+
+\item{rand}{number of randomised versions of curve to plot}
+
+\item{mean}{whether to plot the mean of specified number of random curves
+rather than each individual curve.}
+
+\item{lty}{line type (see \code{\link{par}})}
+
+\item{colpal}{A colour palette. Either a function (see
+\code{\link[grDevices]{rainbow}}) or a vector of colour names. Only used
+when \code{col=NULL})}
 
 \item{decreasing}{Whether to plot the strongest connections closest to the y
 axis (default \code{TRUE})}
@@ -40,6 +55,10 @@ An object of class \code{samplingcurve}, currently implemented as a
 Make a basic sampling curve from a vector of partner ids
 
 \code{plot.samplingcurve} plots a standard sampling curve
+
+\code{lines.samplingcurve} adds a line for a sampling curve to
+  an existing plot. It can also add a specified number of re-randomised
+  versions of the curve, optionally producing a smoothed mean.
 
 \code{hist.samplingcurve} plots a histogram of connections per
   partner neuron. strictly speaking this is a bar plot for a table object
