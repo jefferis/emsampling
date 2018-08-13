@@ -227,6 +227,24 @@ plot_sampling_envelope <- function(x, rand.samples=20, partners="auto", ...) {
   }
 }
 
+
+#' Plot proportion of targets identified versus connections tested
+#'
+#' @param x A \code{samplingcurve} object
+#' @param conn_threshold A (vector of) absolute connection thresholds (i.e.
+#'   integral number of partners)
+#' @param sample Whether to randomise the sampling order
+#' @inheritDotParams samplingcurve
+#'
+#' @export
+#' @examples
+#' scuniform=samplingcurve(rep(1:20,10))
+#' # no randomisation, which reveals the non-random order of connections in the
+#' # scuinform object
+#' plot_prop_identified(scuniform)
+#' # randomising partner order
+#' plot_prop_identified(scuniform, sample=TRUE)
+#' plot_prop_identified(scuniform, conn_threshold=c(0,1,2), sample=TRUE)
 plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
   prop_identified <- function(conn_threshold, x, sample=FALSE) {
     tt=table(x$partner)
