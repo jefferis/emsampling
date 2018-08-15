@@ -39,7 +39,7 @@ set.seed(42)
 ```
 
 ## Toy examples
-Let's consider some toy examples in order to develop some intuiition for and
+Let's consider some toy examples in order to develop some intuition for and
 approaches to this problem.
 
 ### Uniform distribution
@@ -288,7 +288,7 @@ mvh_uniform_mle(scuniform.25, ni=19:24)
 mvh_uniform_mle(subsample(scuniform2k, fraction = .05), ni=19:24)
 ```
 
-Now, in both cases we see that m=20 partners is our maxmimum likelihood estimate. 
+Now, in both cases we see that m=20 partners is our maximum likelihood estimate. 
 
 ### Using the sampling curve
 The preceding section developed a maximum likelihood approach to estimating the
@@ -343,7 +343,7 @@ lines(scuniformr, rand=2000, mean=TRUE, col='blue')
 ### Histogram representation
 
 Given the fact that in a random sampling paradigm, the sampling order should not
-have any meaning, it seems reasonable to think that all the informationg 
+have any meaning, it seems reasonable to think that all the information 
 inherent in the sample is actually contained only in the number of hits for each
 partner. In a real life situation, it would probably make sense to check that
 the observed sample is consistent with a random sample (I think you could 
