@@ -79,7 +79,7 @@
       <h1>Synthetic Sampling Trials</h1>
                         <h4 class="author">Gregory Jefferis</h4>
             
-            <h4 class="date">2018-08-13</h4>
+            <h4 class="date">2018-08-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jefferis/emsampling/blob/master/vignettes/syntheticsamplingtrials.Rmd"><code>vignettes/syntheticsamplingtrials.Rmd</code></a></small>
       <div class="hidden name"><code>syntheticsamplingtrials.Rmd</code></div>
@@ -558,13 +558,14 @@ knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <span class="kw">lines</span>(scuniform, <span class="dt">rand =</span> <span class="dv">20</span>)</code></pre></div>
 <p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-17-1.png" width="576"></p>
 <p>The red line looks like it belongs within the family of grey curves. But what we can we say about the general form of these sampling curves? First of all, the order of connections selected in each sampling curve is irrelevant. Therefore any permutation of the selected connections is equally valid representation of that particular sample.</p>
-<p>Let’s look at a plot with a re-ordering of that 25% sample. We can generalise the step function to a mean curve. The <code>lines.samplingcurve</code> function can do that for us.</p>
+<p>Let’s look at a plot with a re-ordering of that 25% sample. We can generalise the step function to a mean curve. The <code><a href="../reference/samplingcurve.html">lines.samplingcurve()</a></code> method can do that for us.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(scuniform.<span class="dv">25</span>)
 <span class="co"># plot 20 random re-ordering (grey dotted lines)</span>
 <span class="kw">lines</span>(scuniform.<span class="dv">25</span>, <span class="dt">rand=</span><span class="dv">20</span>, <span class="dt">col=</span><span class="st">'grey'</span>)
 <span class="co"># plot the mean of 2000 reorderings</span>
 <span class="kw">lines</span>(scuniform.<span class="dv">25</span>, <span class="dt">rand=</span><span class="dv">2000</span>, <span class="dt">mean=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="st">'blue'</span>)</code></pre></div>
 <p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-18-1.png" width="576"></p>
+<p>Now it’s important to realise that permuting one set of sampled connections is not the same as drawing the same number of connections from the total number available. You can see this in the following plot, which compares two different random draws (green vs grey) vs blue the smooth plot derived from permuting all of the connections.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(scuniform.<span class="dv">25</span>)
 <span class="kw">lines</span>(scuniform.<span class="dv">25</span>, <span class="dt">rand=</span><span class="dv">2000</span>, <span class="dt">mean=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="st">'grey'</span>)
 <span class="co"># compare with another random 25% draw</span>
@@ -572,8 +573,42 @@ scuniform.25v2=<span class="kw"><a href="../reference/subsample.html">subsample<
 <span class="kw">lines</span>(scuniform.25v2, <span class="dt">rand=</span><span class="dv">2000</span>, <span class="dt">mean=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="st">'green'</span>)
 <span class="kw">lines</span>(scuniformr, <span class="dt">rand=</span><span class="dv">2000</span>, <span class="dt">mean=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="st">'blue'</span>)</code></pre></div>
 <p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
+</div>
+<div id="histogram-representation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#histogram-representation" class="anchor"></a>Histogram representation</h3>
+<p>Given the fact that in a random sampling paradigm, the sampling order should not have any meaning, it seems reasonable to think that all the informationg inherent in the sample is actually contained only in the number of hits for each partner. In a real life situation, it would probably make sense to check that the observed sample is consistent with a random sample (I think you could compare with permuted versions and see whether it falls within a reasonable envelope).</p>
+<p>There is a method <code><a href="../reference/samplingcurve.html">hist.samplingcurve()</a></code> that produces a nice order plot of the connection numbers. Naturally if you try this on a random sample, it will not be uniform. For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scuniform.<span class="dv">25</span>)</code></pre></div>
 <p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
+<p>In fact, since for these purposes we do not distinguish between different individual partners, the distribution of connection strengths is a useful summary, and equally informative.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">table</span>(<span class="kw">table</span>(scuniform.<span class="dv">25</span><span class="op">$</span>partner)), <span class="dt">ylab=</span><span class="st">'Number of Partner Neurons'</span>,
+     <span class="dt">xlab=</span><span class="st">'No of Connections'</span>)</code></pre></div>
+<p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+</div>
+<div id="partner-strength-distribution" class="section level3">
+<h3 class="hasAnchor">
+<a href="#partner-strength-distribution" class="anchor"></a>Partner strength distribution</h3>
+<p>So can we use these data to carry out the same kind of maximum likelihood fit? And can we ask if they are consistent with a uniform distribution?</p>
+<p>The second question feels a little easier. We could characterise the deviation of the distribution from some mean/expected value and compare the statistic with a null distribution derived from the proposed distribution. Ah, but we do actually need to know the number of partner neurons to calculate the expected distribution!</p>
+<p>Let’s make a start by computing an expected distribution for a given number of partners for a given sampling fraction</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_partner_strength_urmvhyper &lt;-<span class="st"> </span><span class="cf">function</span>(m, <span class="dt">nbins=</span>m, ..., <span class="dt">normalise=</span><span class="ot">TRUE</span>) {
+  <span class="co"># nb nbins will be an overestimate ...</span>
+  rr=<span class="kw">apply</span>(<span class="kw"><a href="../reference/urmvhyper.html">urmvhyper</a></span>(<span class="dt">m=</span>m, ...), <span class="dv">1</span>, tabulate, nbins)
+  <span class="cf">if</span>(normalise)
+    rr =<span class="st"> </span><span class="kw">scale</span>(rr, <span class="dt">center =</span> F, <span class="dt">scale =</span> <span class="kw">colSums</span>(rr))
+  <span class="kw">rowMeans</span>(rr)
+}
+
+<span class="co"># what we would expect for a 25% sample</span>
+expected_<span class="dv">25</span>=<span class="kw">e_partner_strength_urmvhyper</span>(<span class="dt">m=</span><span class="dv">20</span>, <span class="dt">N=</span><span class="dv">200</span>, <span class="dt">k=</span><span class="dv">50</span>)
+
+tt=<span class="kw">tabulate</span>(<span class="kw">table</span>(scuniform.<span class="dv">25</span><span class="op">$</span>partner), <span class="dt">nbins =</span> <span class="dv">20</span>)
+tt_norm=tt<span class="op">/</span><span class="kw">sum</span>(tt)
+<span class="kw">plot</span>(expected_<span class="dv">25</span>, <span class="dt">type=</span><span class="st">'l'</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">max</span>(tt_norm)), <span class="dt">col=</span><span class="st">'red'</span>, <span class="dt">lwd=</span><span class="dv">2</span>)
+<span class="kw">lines</span>(tt_norm)</code></pre></div>
+<p><img src="syntheticsamplingtrials_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
+<p>I assume that there’s an analytic solution for the expected distribution, but don’t know what it is. One can then compare with that observed sample. Presumably you could use a chi2 goodness of fit or a perhaps the KL divergence to measure the difference.</p>
 </div>
 </div>
   </div>

@@ -314,7 +314,8 @@ any permutation of the selected connections is equally valid representation of
 that particular sample. 
 
 Let's look at a plot with a re-ordering of that 25% sample. We can generalise 
-the step function to a mean curve. The `lines.samplingcurve` function can do that for us.
+the step function to a mean curve. The `lines.samplingcurve()` method can do
+that for us.
 
 ```{r}
 plot(scuniform.25)
@@ -324,6 +325,11 @@ lines(scuniform.25, rand=20, col='grey')
 lines(scuniform.25, rand=2000, mean=TRUE, col='blue')
 ```
 
+Now it's important to realise that permuting one set of sampled connections is 
+not the same as drawing the same number of connections from the total number 
+available. You can see this in the following plot, which compares two different
+random draws (green vs grey) vs blue the smooth plot derived from permuting all
+of the connections.
 
 ```{r}
 plot(scuniform.25)
@@ -334,8 +340,67 @@ lines(scuniform.25v2, rand=2000, mean=TRUE, col='green')
 lines(scuniformr, rand=2000, mean=TRUE, col='blue')
 ```
 
+### Histogram representation
 
+Given the fact that in a random sampling paradigm, the sampling order should not
+have any meaning, it seems reasonable to think that all the informationg 
+inherent in the sample is actually contained only in the number of hits for each
+partner. In a real life situation, it would probably make sense to check that
+the observed sample is consistent with a random sample (I think you could 
+compare with permuted versions and see whether it falls within a reasonable 
+envelope).
+
+There is a method `hist.samplingcurve()` that produces a nice order plot of the 
+connection numbers. Naturally if you try this on a random sample, it will not be
+uniform. For example:
 
 ```{r}
 hist(scuniform.25)
 ```
+
+In fact, since for these purposes we do not distinguish between different 
+individual partners, the distribution of connection strengths is a useful 
+summary, and equally informative.
+
+```{r}
+plot(table(table(scuniform.25$partner)), ylab='Number of Partner Neurons',
+     xlab='No of Connections')
+
+```
+
+### Partner strength distribution
+So can we use these data to carry out the same kind of maximum likelihood fit?
+And can we ask if they are consistent with a uniform distribution?
+
+The second question feels a little easier. We could characterise the deviation
+of the distribution from some mean/expected value and compare the statistic with
+a null distribution derived from the proposed distribution. Ah, but we do 
+actually need to know the number of partner neurons to calculate the expected 
+distribution!
+
+Let's make a start by computing an expected distribution for a given number of
+partners for a given sampling fraction
+
+```{r}
+e_partner_strength_urmvhyper <- function(m, nbins=m, ..., normalise=TRUE) {
+  # nb nbins will be an overestimate ...
+  rr=apply(urmvhyper(m=m, ...), 1, tabulate, nbins)
+  if(normalise)
+    rr = scale(rr, center = F, scale = colSums(rr))
+  rowMeans(rr)
+}
+
+# what we would expect for a 25% sample
+expected_25=e_partner_strength_urmvhyper(m=20, N=200, k=50)
+
+tt=tabulate(table(scuniform.25$partner), nbins = 20)
+tt_norm=tt/sum(tt)
+plot(expected_25, type='l', ylim=c(0,max(tt_norm)), col='red', lwd=2)
+lines(tt_norm)
+```
+
+I assume that there's an analytic solution for the expected distribution, but 
+don't know what it is. One can then compare with that observed sample. Presumably
+you could use a chi2 goodness of fit or a perhaps the KL divergence to measure
+the difference.
+
