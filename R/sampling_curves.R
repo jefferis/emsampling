@@ -232,7 +232,8 @@ plot_sampling_envelope <- function(x, rand.samples=20, partners="auto", ...) {
 #'
 #' @param x A \code{samplingcurve} object
 #' @param conn_threshold A (vector of) absolute connection thresholds (i.e.
-#'   integral number of partners)
+#'   integral number of partners). A threshold of 1 (the default) implies
+#'   partners with 1 or more connections (i.e. all partners).
 #' @param sample Whether to randomise the sampling order
 #' @inheritDotParams samplingcurve
 #'
@@ -244,8 +245,8 @@ plot_sampling_envelope <- function(x, rand.samples=20, partners="auto", ...) {
 #' plot_prop_identified(scuniform)
 #' # randomising partner order
 #' plot_prop_identified(scuniform, sample=TRUE)
-#' plot_prop_identified(scuniform, conn_threshold=c(0,1,2), sample=TRUE)
-plot_prop_identified <- function(x, conn_threshold=0, sample=FALSE, ...) {
+#' plot_prop_identified(scuniform, conn_threshold=1:3, sample=TRUE)
+plot_prop_identified <- function(x, conn_threshold=1, sample=FALSE, ...) {
   prop_identified <- function(conn_threshold, x, sample=FALSE) {
     tt=table(x$partner)
     selected_partners=names(which(tt>conn_threshold))

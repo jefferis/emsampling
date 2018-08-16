@@ -4,13 +4,14 @@
 \alias{plot_prop_identified}
 \title{Plot proportion of targets identified versus connections tested}
 \usage{
-plot_prop_identified(x, conn_threshold = 0, sample = FALSE, ...)
+plot_prop_identified(x, conn_threshold = 1, sample = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{samplingcurve} object}
 
 \item{conn_threshold}{A (vector of) absolute connection thresholds (i.e.
-integral number of partners)}
+integral number of partners). A threshold of 1 (the default) implies
+partners with 1 or more connections (i.e. all partners).}
 
 \item{sample}{Whether to randomise the sampling order}
 
@@ -33,5 +34,5 @@ scuniform=samplingcurve(rep(1:20,10))
 plot_prop_identified(scuniform)
 # randomising partner order
 plot_prop_identified(scuniform, sample=TRUE)
-plot_prop_identified(scuniform, conn_threshold=c(0,1,2), sample=TRUE)
+plot_prop_identified(scuniform, conn_threshold=1:3, sample=TRUE)
 }
