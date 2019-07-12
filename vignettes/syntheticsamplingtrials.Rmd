@@ -93,7 +93,7 @@ plot_prop_identified(scuniformr)
 
 In this instance, this is identical to the plot above, just with the axes
 normalised. Things could be different of course if we set some threshold on 
-which partners (strong?) we wanted to 
+which partners (only strong ones?) we wanted to show.
 
 ### Uniform - more synapses
 
@@ -403,4 +403,47 @@ I assume that there's an analytic solution for the expected distribution, but
 don't know what it is. One can then compare with that observed sample. Presumably
 you could use a chi2 goodness of fit or a perhaps the KL divergence to measure
 the difference.
+
+TODO --- implement EM method for this.
+
+## Mixture model
+
+All of the discussion so far has used a uniform distribution for n_i, the number of 
+balls of each colour. However we know that this is not the case for real neurons --- 
+they have partners with variable numbers of neurons. Let's take a look at a real
+distribution to motivate this.
+
+This is an example of a complete upstream data set of the dendrites of a lateral
+horn neuron
+
+```{r}
+data("pd2a1.1.sc")
+plot(pd2a1.1.sc)
+lines(pd2a1.1.sc, rand=1000, mean=TRUE)
+```
+
+Note that the sampling curve shows a strong bias in focussing on the same partners
+early on (the sampling was not randomised), which you can see by the fact that
+the red line falls significantly below the grey mean line.
+
+```{r}
+hist(pd2a1.1.sc)
+```
+
+We can also summarise this as the number of partners with a given number of connections
+
+```{r}
+connection_strength_table=table(table(pd2a1.1.sc$partner))
+plot(connection_strength_table)
+```
+
+This clearly emphasises the large number of weak inputs, while also indicating a long tail of strong inputs. One might suspect that many of these weak inputs do not have an impact
+on the firing of the neuron; however if they are synchronous e.g. because they
+are from cells of the type, carrying the same information, then such weak inputs
+would be more likely to have an impact. This means that deciding on a threshold
+connection strength for "interesting" partner neurons may be difficult.
+
+
+It might be interesting to consider a family of distributions that could be parameterised to 
+show different amounts of skew.
 
