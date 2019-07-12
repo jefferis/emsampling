@@ -52,8 +52,6 @@ An object of class \code{samplingcurve}, currently implemented as a
   partner used for the plot.
 }
 \description{
-Make a basic sampling curve from a vector of partner ids
-
 \code{plot.samplingcurve} plots a standard sampling curve
 
 \code{lines.samplingcurve} adds a line for a sampling curve to
