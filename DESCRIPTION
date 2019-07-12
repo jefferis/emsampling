@@ -27,5 +27,6 @@ Remotes: jefferis/rcatmaid,
     jefferis/elmr
 Language: en-GB
 VignetteBuilder: knitr
-URL: https://github.com/jefferis/emsampling
+URL: https://jefferis.github.io/emsampling,
+     https://github.com/jefferis/emsampling
 BugReports: https://github.com/jefferis/emsampling/issues

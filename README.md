@@ -1,4 +1,5 @@
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Docs](https://img.shields.io/badge/docs-100%25-brightgreen.svg)](http://jefferis.github.io/emsampling/reference/)
 
 # emsampling
 
@@ -14,3 +15,10 @@ You can install the development version of emsampling like so:
 devtools::install_github('jefferis/emsampling')
 ```
 
+## Documentation
+
+Try `?emsampling
+
+* http://jefferis.github.io/emsampling/
+* http://jefferis.github.io/emsampling/reference/
+* http://jefferis.github.io/emsampling/articles/
