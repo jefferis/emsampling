@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate replicates for uniform multivariate hypergeometric distribution — urmvhyper • emsampling</title>
+<title>samplingcurve object for dendritic inputs of PD2a1#1 lateral horn neuron — pd2a1.1.sc • emsampling</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Generate replicates for uniform multivariate hypergeometric distribution — urmvhyper" />
+<meta property="og:title" content="samplingcurve object for dendritic inputs of PD2a1#1 lateral horn neuron — pd2a1.1.sc" />
 
-<meta property="og:description" content="Generate replicates for uniform multivariate hypergeometric distribution" />
+<meta property="og:description" content="samplingcurve object for dendritic inputs of PD2a1#1 lateral horn neuron" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,66 +111,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate replicates for uniform multivariate hypergeometric distribution</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jefferis/emsampling/blob/master/R/sampling_curves.R'><code>R/sampling_curves.R</code></a></small>
-    <div class="hidden name"><code>urmvhyper.Rd</code></div>
+    <h1>samplingcurve object for dendritic inputs of PD2a1#1 lateral horn neuron</h1>
+    <small class="dont-index">Source: <a href='https://github.com/jefferis/emsampling/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>pd2a1.1.sc.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generate replicates for uniform multivariate hypergeometric distribution</p>
+    <p>samplingcurve object for dendritic inputs of PD2a1#1 lateral horn neuron</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>urmvhyper</span>(<span class='no'>N</span>, <span class='no'>m</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fraction</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nn</span> <span class='kw'>=</span> <span class='fl'>10000</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>N</th>
-      <td><p>number of marbles</p></td>
-    </tr>
-    <tr>
-      <th>m</th>
-      <td><p>number of colours</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>sample size</p></td>
-    </tr>
-    <tr>
-      <th>fraction</th>
-      <td><p>Fraction of N to sample</p></td>
-    </tr>
-    <tr>
-      <th>nn</th>
-      <td><p>Number of replicates</p></td>
-    </tr>
-    </table>
+    <pre class="usage"><span class='no'>pd2a1.1.sc</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>An object of class <code>samplingcurve</code> (inherits from <code>data.frame</code>) with 1035 rows and 2 columns.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>N,m</code> The number of marbles of each colour in the urn must be
-  integral. If the total number of marbles, <code>N</code>, is not evenly divisible
-  by the number of colours, <code>m</code>, the remaining r marbles are added one
-  by one to the the first r colours.</p>
+    <p>See <code>data-raw/pd2a1.1.R</code> for details of how this object was
+  constructed.</p>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/extraDistr/topics/MultiHypergeometric'>rmvhyper</a></code>, <code><a href='https://www.rdocumentation.org/packages/stats/topics/Hypergeometric'>rhyper</a></code></p></div>
+    <p>See <a href='https://www.biorxiv.org/content/early/2017/08/29/167312'>https://www.biorxiv.org/content/early/2017/08/29/167312</a></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/hist'>hist</a></span>(<span class='no'>pd2a1.1.sc</span>))</div><div class='img'><img src='pd2a1.1.sc-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='pd2a1.1.sc-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#format">Format</a></li>
+
       <li><a href="#details">Details</a></li>
 
-      <li><a href="#see-also">See also</a></li>
-          </ul>
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

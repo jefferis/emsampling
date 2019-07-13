@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate replicates for uniform multivariate hypergeometric distribution — urmvhyper • emsampling</title>
+<title>emsampling: Experimental functions to analyse EM connectomics data — emsampling-package • emsampling</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Generate replicates for uniform multivariate hypergeometric distribution — urmvhyper" />
+<meta property="og:title" content="emsampling: Experimental functions to analyse EM connectomics data — emsampling-package" />
 
-<meta property="og:description" content="Generate replicates for uniform multivariate hypergeometric distribution" />
+<meta property="og:description" content="Experimental functions to analyse the results of electron 
+    microscopy connectomics data, focussed on the common situation where only
+    some of the connections for a given neuron have been identified." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,67 +113,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate replicates for uniform multivariate hypergeometric distribution</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jefferis/emsampling/blob/master/R/sampling_curves.R'><code>R/sampling_curves.R</code></a></small>
-    <div class="hidden name"><code>urmvhyper.Rd</code></div>
+    <h1>emsampling: Experimental functions to analyse EM connectomics data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/jefferis/emsampling/blob/master/R/emsampling-package.R'><code>R/emsampling-package.R</code></a></small>
+    <div class="hidden name"><code>emsampling-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generate replicates for uniform multivariate hypergeometric distribution</p>
+    <p>Experimental functions to analyse the results of electron 
+    microscopy connectomics data, focussed on the common situation where only
+    some of the connections for a given neuron have been identified.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>urmvhyper</span>(<span class='no'>N</span>, <span class='no'>m</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fraction</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nn</span> <span class='kw'>=</span> <span class='fl'>10000</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>N</th>
-      <td><p>number of marbles</p></td>
-    </tr>
-    <tr>
-      <th>m</th>
-      <td><p>number of colours</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>sample size</p></td>
-    </tr>
-    <tr>
-      <th>fraction</th>
-      <td><p>Fraction of N to sample</p></td>
-    </tr>
-    <tr>
-      <th>nn</th>
-      <td><p>Number of replicates</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+        
+    <h2 class="hasAnchor" id="getting-started"><a class="anchor" href="#getting-started"></a>Getting started</h2>
 
-    <p><code>N,m</code> The number of marbles of each colour in the urn must be
-  integral. If the total number of marbles, <code>N</code>, is not evenly divisible
-  by the number of colours, <code>m</code>, the remaining r marbles are added one
-  by one to the the first r colours.</p>
+    <p>It is worth looking at the documentation main class
+  in the package, <code><a href='samplingcurve.html'>samplingcurve</a></code>, as well as the articles on the
+  <a href='https://jefferis.github.io/emsampling'>documentation website</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/extraDistr/topics/MultiHypergeometric'>rmvhyper</a></code>, <code><a href='https://www.rdocumentation.org/packages/stats/topics/Hypergeometric'>rhyper</a></code></p></div>
+    <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://jefferis.github.io/emsampling'>https://jefferis.github.io/emsampling</a></p></li>
+<li><p><a href='https://github.com/jefferis/emsampling'>https://github.com/jefferis/emsampling</a></p></li>
+<li><p>Report bugs at <a href='https://github.com/jefferis/emsampling/issues'>https://github.com/jefferis/emsampling/issues</a></p></li>
+</ul></div>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
+      <li><a href="#getting-started">Getting started</a></li>
 
       <li><a href="#see-also">See also</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p><strong>Maintainer</strong>: Gregory Jefferis <a href='mailto:jefferis@gmail.com'>jefferis@gmail.com</a> (0000-0002-0587-9355)</p>
   </div>
 </div>
 
