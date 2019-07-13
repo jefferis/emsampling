@@ -1,8 +1,8 @@
+#' @section Getting started: It is worth looking at the documentation main class
+#'   in the package, \code{\link{samplingcurve}}, as well as the articles on the
+#'   \href{https://jefferis.github.io/emsampling}{documentation website}.
+#'
 #' @keywords internal
-#'
-#'   It is worth looking at the documentation main class in the package,
-#'   \code{\link{samplingcurve}}, as well as the articles on the documentation website.
-#'
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

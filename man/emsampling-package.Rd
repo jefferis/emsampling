@@ -10,6 +10,12 @@ Experimental functions to analyse the results of electron
     microscopy connectomics data, focussed on the common situation where only
     some of the connections for a given neuron have been identified.
 }
+\section{Getting started}{
+ It is worth looking at the documentation main class
+  in the package, \code{\link{samplingcurve}}, as well as the articles on the
+  \href{https://jefferis.github.io/emsampling}{documentation website}.
+}
+
 \seealso{
 Useful links:
 \itemize{
@@ -23,21 +29,4 @@ Useful links:
 \strong{Maintainer}: Gregory Jefferis \email{jefferis@gmail.com} (0000-0002-0587-9355)
 
 }
-\keyword{It}
-\keyword{\code{\link{samplingcurve}},}
-\keyword{articles}
-\keyword{as}
-\keyword{at}
-\keyword{class}
-\keyword{documentation}
-\keyword{in}
 \keyword{internal}
-\keyword{is}
-\keyword{looking}
-\keyword{main}
-\keyword{on}
-\keyword{package,}
-\keyword{the}
-\keyword{website.}
-\keyword{well}
-\keyword{worth}
