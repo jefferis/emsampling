@@ -17,18 +17,21 @@
 #'   vector naming the volume or a surface object that is (or can be converted
 #'   \link{\code{as.mesh3d}}) class \link{\code{mesh3d}} e.g.
 #'   \code{\link{hxsurf}}.
+#' @param keep.input Whether or not to keep the raw input as an attribute on the
+#'   \code{samplingcurve} object.
 #'
 #' @return An object of class \code{\link{samplingcurve}}
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' sc=make_rand_sampling_curve(2560371)
+#' sc=make_rand_sampling_curve(2560371, sample=FALSE, partners='out')
 #' head(sc)
 #' plot(sc)
+#' lines(sc, rand=20)
 #' }
 make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'),
-                                     sample=TRUE, volume=NULL) {
+                                     sample=TRUE, volume=NULL, keep.input=TRUE) {
   partners=match.arg(partners)
   if(!is.data.frame(x)) {
     if(partners=='auto'){
@@ -49,13 +52,18 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'),
   }
   if(sample)
     partner_skid <- sample(partner_skid)
-  samplingcurve(partner_skid)
+  res <- samplingcurve(partner_skid)
+  if(keep.input){
+    attr(res, 'partners')=x
+  }
+  res
 }
 
 
 #' Make a basic sampling curve from a vector of partner ids
 #'
-#' @param partners A vector or partner neuron identifiers (typically numeric such as CATMAID skeleton ids)
+#' @param partners A vector or partner neuron identifiers (typically numeric
+#'   such as CATMAID skeleton ids)
 #' @param N,m optional parameters describing the total number of connections and
 #'   the total number of partners (if known).
 #'
