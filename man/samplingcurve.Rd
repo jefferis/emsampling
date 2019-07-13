@@ -17,7 +17,8 @@ samplingcurve(partners, N = NULL, m = NULL)
 \method{hist}{samplingcurve}(x, decreasing = TRUE, plot = TRUE, ...)
 }
 \arguments{
-\item{partners}{A vector or partner neuron identifiers (typically numeric such as CATMAID skeleton ids)}
+\item{partners}{A vector or partner neuron identifiers (typically numeric
+such as CATMAID skeleton ids)}
 
 \item{N, m}{optional parameters describing the total number of connections and
 the total number of partners (if known).}
@@ -69,6 +70,12 @@ plot(scuniform)
 lines(scuniform, rand=20)
 # add a smooth mean
 lines(scuniform, rand=1000, mean=TRUE, col='black')
+
+# use real sample data for inputs to a lateral horn neuron
+plot(pd2a1.1.sc)
+lines(pd2a1.1.sc, rand=20)
 scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
-hist(scuniform)
+hist(scuniform, main='20 neurons with equal connection probability')
+
+hist(pd2a1.1.sc, main='Inputs to a lateral horn neuron')
 }

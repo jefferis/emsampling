@@ -24,10 +24,16 @@
 #' @export
 #'
 #' @examples
+#'
+#'
 #' \donttest{
-#' sc=make_rand_sampling_curve(2560371, sample=FALSE, partners='out')
+#' sc=make_rand_sampling_curve(2560371, partners='out')
 #' head(sc)
-#' plot(sc)
+#' plot(sc, main='Randomised output sampling curve for rLPTCIN')
+#' lines(sc, rand=20)
+#'
+#' scin=make_rand_sampling_curve(2560371, partners='in')
+#' plot(sc, main='Randomised input sampling curve for rLPTCIN')
 #' lines(sc, rand=20)
 #' }
 make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'),
@@ -78,6 +84,10 @@ make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'),
 #' lines(scuniform, rand=20)
 #' # add a smooth mean
 #' lines(scuniform, rand=1000, mean=TRUE, col='black')
+#'
+#' # use real sample data for inputs to a lateral horn neuron
+#' plot(pd2a1.1.sc)
+#' lines(pd2a1.1.sc, rand=20)
 samplingcurve <- function(partners, N=NULL, m=NULL) {
   new=!duplicated(partners)
   csnew=cumsum(new)
@@ -184,7 +194,9 @@ lines.samplingcurve <- function(x, rand=0, mean=FALSE, lty=3, col=NULL, ..., col
 #' @rdname samplingcurve
 #' @examples
 #' scuniform=samplingcurve(sample(1:20, size=200, replace=TRUE))
-#' hist(scuniform)
+#' hist(scuniform, main='20 neurons with equal connection probability')
+#'
+#' hist(pd2a1.1.sc, main='Inputs to a lateral horn neuron')
 hist.samplingcurve <- function(x, decreasing = TRUE, plot=TRUE, ...) {
   tt=table(x$partner)
   stt=sort(tt, decreasing=decreasing)

@@ -5,7 +5,7 @@
 \title{Make (randomised) sampling curve object for neuron or connection table}
 \usage{
 make_rand_sampling_curve(x, partners = c("auto", "out", "in"),
-  sample = TRUE)
+  sample = TRUE, volume = NULL, keep.input = TRUE)
 }
 \arguments{
 \item{x}{A \code{\link{catmaid_skids}} compatible neuron specification or a
@@ -17,6 +17,15 @@ neuron.}
 \item{sample}{Whether to randomise the connection order (this is the right
 thing to do if the input neuron has been completed but was not randomly
 sampled in the first place.)}
+
+\item{volume}{An optional neuropil volume to which connectors can be
+restricted after being fetched from CATMAID. Can be either a character
+vector naming the volume or a surface object that is (or can be converted
+\link{\code{as.mesh3d}}) class \link{\code{mesh3d}} e.g.
+\code{\link{hxsurf}}.}
+
+\item{keep.input}{Whether or not to keep the raw input as an attribute on the
+\code{samplingcurve} object.}
 }
 \value{
 An object of class \code{\link{samplingcurve}}
@@ -31,9 +40,16 @@ Make (randomised) sampling curve object for neuron or connection table
   using any form compatible with \code{\link{catmaid_skids}}).
 }
 \examples{
+
+
 \donttest{
-sc=make_rand_sampling_curve(2560371)
+sc=make_rand_sampling_curve(2560371, partners='out')
 head(sc)
-plot(sc)
+plot(sc, main='Randomised output sampling curve for rLPTCIN')
+lines(sc, rand=20)
+
+scin=make_rand_sampling_curve(2560371, partners='in')
+plot(sc, main='Randomised input sampling curve for rLPTCIN')
+lines(sc, rand=20)
 }
 }

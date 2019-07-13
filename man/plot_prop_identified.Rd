@@ -17,7 +17,8 @@ partners with 1 or more connections (i.e. all partners).}
 
 \item{...}{Arguments passed on to \code{samplingcurve}
 \describe{
-  \item{partners}{A vector or partner neuron identifiers (typically numeric such as CATMAID skeleton ids)}
+  \item{partners}{A vector or partner neuron identifiers (typically numeric
+such as CATMAID skeleton ids)}
   \item{N}{optional parameters describing the total number of connections and
 the total number of partners (if known).}
   \item{m}{optional parameters describing the total number of connections and
