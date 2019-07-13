@@ -17,8 +17,8 @@ devtools::install_github('jefferis/emsampling')
 
 ## Documentation
 
-Try `?emsampling
+In R you can start with `?emsampling` or `?samplingcurve` or you can follow
+these links to the [online documentation](http://jefferis.github.io/emsampling/).
 
-* http://jefferis.github.io/emsampling/
-* http://jefferis.github.io/emsampling/reference/
-* http://jefferis.github.io/emsampling/articles/
+* [Function Reference](http://jefferis.github.io/emsampling/reference/)
+* [Vignettes](http://jefferis.github.io/emsampling/articles/)
