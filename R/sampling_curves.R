@@ -86,6 +86,13 @@ samplingcurve <- function(partners, N=NULL, m=NULL) {
 get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
   partners=match.arg(partners)
   df <- catmaid_get_connector_table(x, direction = partners)
+  unidentified_partners=is.na(df$partner_skid)
+  if(any(unidentified_partners)) {
+    warning("Dropping ", sum(unidentified_partners),' for neuron: ', x)
+    dropped=df[unidentified_partners,,drop=FALSE]
+    df=df[!unidentified_partners,,drop=FALSE]
+    attr(df, 'unidentified_partners')=dropped
+  }
   df$nodes=catmaid_get_node_count(df$partner_skid)
   df$nsoma=nsoma(df$partner_skid)
   if(!is.null(volume)) {
