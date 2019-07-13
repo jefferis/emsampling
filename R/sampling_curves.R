@@ -12,6 +12,11 @@
 #' @param sample Whether to randomise the connection order (this is the right
 #'   thing to do if the input neuron has been completed but was not randomly
 #'   sampled in the first place.)
+#' @param volume An optional neuropil volume to which connectors can be
+#'   restricted after being fetched from CATMAID. Can be either a character
+#'   vector naming the volume or a surface object that is (or can be converted
+#'   \link{\code{as.mesh3d}}) class \link{\code{mesh3d}} e.g.
+#'   \code{\link{hxsurf}}.
 #'
 #' @return An object of class \code{\link{samplingcurve}}
 #' @export
@@ -22,13 +27,15 @@
 #' head(sc)
 #' plot(sc)
 #' }
-make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'), sample=TRUE) {
+make_rand_sampling_curve <- function(x, partners=c("auto", "out", 'in'),
+                                     sample=TRUE, volume=NULL) {
   partners=match.arg(partners)
   if(!is.data.frame(x)) {
-    if(partners=='auto')
-      warning('Assuming that you want the outputs of this neuron')
-    partners="out"
-    x=get_partners(x)
+    if(partners=='auto'){
+      warning('partners="auto". Assuming that you want the outputs of this neuron')
+      partners="out"
+    }
+    x=get_partners(x, partners = partners, volume = volume)
   }
 
   nunique=function(x) length(unique(x))
@@ -90,7 +97,7 @@ get_partners <- function(x, partners=c("out", "in"), volume=NULL) {
       volume=subset(elmr::FAFBNP.surf, subset=volume)
     }
     pp=pointsinside(df, volume)
-    df=df[pp,]
+    df=df[pp,,drop=FALSE]
   }
   df
 }
