@@ -15,7 +15,7 @@
 #' @param volume An optional neuropil volume to which connectors can be
 #'   restricted after being fetched from CATMAID. Can be either a character
 #'   vector naming the volume or a surface object that is (or can be converted
-#'   \link{\code{as.mesh3d}}) class \link{\code{mesh3d}} e.g.
+#'   \code{\link{as.mesh3d}}) class \code{\link[rgl]{mesh3d}} e.g.
 #'   \code{\link{hxsurf}}.
 #' @param keep.input Whether or not to keep the raw input as an attribute on the
 #'   \code{samplingcurve} object.
