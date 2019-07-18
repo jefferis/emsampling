@@ -249,33 +249,49 @@ we might have hit a different number by chance.
 
 We could try to identify the most likely value for `m` by simulating a 25% sample
 for many values of m and then choosing the one most likely to generate the 
-observed sampling curve. Now we know that `m` must be greater than 
+observed sampling curve. Now we know that `m` must be greater than the observed
+number of partners.
 
 ```{r}
-mvh_uniform_mle <- function(x, ni=NULL, N=attr(x, 'N'), ...) {
+#' Brute force maximum likelihood estimate for uniform multivariate distribution
+#'
+#' @param x \code{samplingcurve} object
+#' @param mi Range of m (i.e. number of parter neurons) to consider. When only
+#'   one value is given then that is assumed to be the max to consider and the
+#'   minimum is taken from the observer number of classes.
+#' @param N total number of connections 
+#' @param ... passed to \code{urmvhyper}
+#'
+#' @return
+#' @export
+#'
+#' @examples
+mvh_uniform_mle <- function(x, mi=NULL, N=attr(x, 'N'), ...) {
   stopifnot(inherits(x,'samplingcurve'))
   stopifnot(isTRUE(N>1))
   observed_m=length(unique(x$partner))
   max_m=N # hopefully this is massive overestimate
   # would be great if we could adaptively reduce max_m when we have gone over
   # the hump
-  if(is.null(ni))
-    ni=seq.int(observed_m, max_m)
+  if(is.null(mi))
+    mi=seq.int(observed_m, max_m)
   else {
+    if(length(mi)==1)
+      mi <- seq.int(observed_m, mi)
     # check we have a sensible range
-    if(ni[1]<observed_m) {
-      warning("minimum ni < observed_m")
+    if(mi[1]<observed_m) {
+      warning("minimum mi < observed_m")
     }
-    stopifnot(ni[length(ni)]<max_m)
+    stopifnot(mi[length(mi)]<max_m)
   }
   k=nrow(x)
   
   # calculate number of observations matching observed value for each n_i
-  nobs=sapply(ni, 
+  nobs=sapply(mi, 
               function(m) sum(rowSums(
                 urmvhyper(N=N, m=m, k=k, ...)>0)==observed_m)
               )
-  names(nobs)=ni
+  names(nobs)=mi
   nobs
 }
 
@@ -284,11 +300,11 @@ mvh_uniform_mle <- function(x, ni=NULL, N=attr(x, 'N'), ...) {
 Now, let's use those functions:
 
 ```{r}
-mvh_uniform_mle(scuniform.25, ni=19:24)
-mvh_uniform_mle(subsample(scuniform2k, fraction = .05), ni=19:24)
+mvh_uniform_mle(scuniform.25, mi=24)
+mvh_uniform_mle(subsample(scuniform2k, fraction = .05), mi=24)
 ```
 
-Now, in both cases we see that m=20 partners is our maximum likelihood estimate. 
+In general we see that our maximum likelihood estimate is m=20,21.
 
 ### Using the sampling curve
 The preceding section developed a maximum likelihood approach to estimating the
@@ -439,11 +455,11 @@ plot(connection_strength_table)
 
 This clearly emphasises the large number of weak inputs, while also indicating a long tail of strong inputs. One might suspect that many of these weak inputs do not have an impact
 on the firing of the neuron; however if they are synchronous e.g. because they
-are from cells of the type, carrying the same information, then such weak inputs
+are from cells of the same type, carrying the same information, then such weak inputs
 would be more likely to have an impact. This means that deciding on a threshold
-connection strength for "interesting" partner neurons may be difficult.
+connection strength for "interesting" partner neurons may be difficult. In published
+work the best approach for estimating such interesting partners in the absence of
+experimental data is to use bilateral symmetry.
 
-
-It might be interesting to consider a family of distributions that could be parameterised to 
-show different amounts of skew.
+It might be interesting to consider a family of distributions that could be parameterised to show different amounts of skew.
 
